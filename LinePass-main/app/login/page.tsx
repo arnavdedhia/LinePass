@@ -36,8 +36,8 @@ export default function LoginPage() {
       <h1 className="text-3xl font-bold">Welcome to LinePass</h1>
       <p className="mt-2 text-slate-600">Log in to view your guest pass.</p>
       <form className="mt-8 space-y-4" onSubmit={submit}>
-        <input className="w-full rounded border p-3" name="username" placeholder="Username" required />
-        <input className="w-full rounded border p-3" name="password" placeholder="Password" type="password" required />
+        <input className="w-full rounded border p-3" name="username" placeholder="Username (optional locally)" />
+        <input className="w-full rounded border p-3" name="password" placeholder="Password (optional locally)" type="password" />
         {error && <p className="text-sm text-red-700">{error}</p>}
         <button className="w-full rounded bg-ink px-4 py-3 font-semibold text-white disabled:opacity-50" disabled={pending}>
           {pending ? "Logging in..." : "Log in"}
