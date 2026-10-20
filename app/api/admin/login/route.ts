@@ -5,7 +5,13 @@ const FAILED_LOGIN_DELAY_MS = 1000;
 
 export async function POST(request: Request) {
   if (!hasAdminPassword()) {
-    return NextResponse.json({ error: "Admin login is not set up. Add ADMIN_PASSWORD to .env.local." }, { status: 503 });
+    return NextResponse.json(
+      {
+        error:
+          "Admin login is not set up. Add ADMIN_PASSWORD to .env.local (local) or to the Vercel project's Environment Variables (live site), then restart or redeploy."
+      },
+      { status: 503 }
+    );
   }
 
   const body = await request.json().catch(() => ({}));

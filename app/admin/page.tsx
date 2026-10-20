@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ADMIN_COOKIE, verifyAdminToken } from "../../lib/adminAuth";
 import { getSupabaseServer, hasSupabaseConfig } from "../../lib/supabase";
@@ -44,11 +45,19 @@ export default async function AdminPage() {
     <section>
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Admin</h1>
-        <LogoutButton />
+        <div className="flex items-center gap-3">
+          <Link href="/admin/users" className="rounded border px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            Users
+          </Link>
+          <LogoutButton />
+        </div>
       </div>
 
       {!overview ? (
-        <p className="mt-6 text-slate-600">Supabase is not configured. Add your keys to .env.local.</p>
+        <p className="mt-6 text-slate-600">
+          Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local (local) or
+          in the Vercel project&apos;s Environment Variables (live site), then restart or redeploy.
+        </p>
       ) : (
         <>
           <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
