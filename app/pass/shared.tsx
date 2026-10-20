@@ -11,6 +11,20 @@ export const passesBackground = {
     "radial-gradient(120% 45% at 100% 0%, rgba(8, 82, 164, 0.95) 0%, rgba(11, 58, 108, 0.75) 35%, rgba(14, 38, 62, 0) 75%)"
 };
 
+export const RESET_HOUR = 4;
+
+export function barDayWeekday(now: Date) {
+  return new Date(now.getTime() - RESET_HOUR * 60 * 60 * 1000).toLocaleDateString("en-US", { weekday: "short" });
+}
+
+export function barDayDate(now: Date) {
+  return new Date(now.getTime() - RESET_HOUR * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+export function coverTitle(now: Date) {
+  return `Cover (${barDayWeekday(now)}, All Day)`;
+}
+
 export function useNow() {
   const [now, setNow] = useState<Date | null>(null);
 
@@ -88,7 +102,13 @@ function NavItem({
     </>
   );
 
-  if (!href) return <div className={className}>{content}</div>;
+  if (!href) {
+    return (
+      <button type="button" className={className}>
+        {content}
+      </button>
+    );
+  }
 
   return (
     <Link href={href} className={className} aria-current={active ? "page" : undefined}>
@@ -119,7 +139,6 @@ export function BottomNav({ active }: { active: "venues" | "passes" }) {
         }
       />
       <NavItem
-        href="/pass"
         active={active === "passes"}
         label="My Passes"
         icon={

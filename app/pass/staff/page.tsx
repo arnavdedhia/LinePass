@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useStartRedeem } from "../RedeemTransition";
 import { lato, QrCode, useNow } from "../shared";
+import { useSelectedVenue } from "../VenueContext";
 
 const EMOJIS = [
   "💅", "🦄", "🍕", "🎸", "🌮", "🐙", "🍉", "🚀", "🦊", "🎲",
@@ -19,9 +19,11 @@ function formatCurrentTime(date: Date) {
 }
 
 function VenueLogo() {
+  const { venue } = useSelectedVenue();
+
   return (
     <div className="relative aspect-square h-[clamp(60px,10.25dvh,82px)] overflow-hidden rounded-full border-[4px] border-[#0884fe] bg-[#1f2a36] [@media(max-height:520px)]:h-[48px]">
-      <Image src="/red-lion-logo.jpg" alt="The Red Lion" fill sizes="82px" priority className="object-cover" />
+      <Image src={venue.logo} alt={`${venue.name} logo`} fill sizes="82px" priority className="object-cover" />
     </div>
   );
 }
@@ -68,10 +70,7 @@ function WarningIcon() {
 
 export default function StaffPage() {
   const now = useNow();
-  const router = useRouter();
   const startRedeem = useStartRedeem();
-
-  useEffect(() => router.prefetch("/pass/none"), [router]);
 
   return (
     <section className={`${lato.className} fixed inset-0 z-50 flex flex-col items-center overflow-hidden bg-[#101a24] text-white`}>

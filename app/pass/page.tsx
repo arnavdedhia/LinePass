@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { BottomNav, LinePassMark, lato, passesBackground, QrCode, useNow } from "./shared";
-
-const RESET_HOUR = 4;
+import { BottomNav, coverTitle, LinePassMark, lato, passesBackground, QrCode, RESET_HOUR, useNow } from "./shared";
+import { useSelectedVenue } from "./VenueContext";
+import type { Venue } from "./venues";
 
 const pass = {
-  venue: "Red Lion",
-  title: "Cover (Wed, iCard)",
   quantity: 1,
   passholder: "Arnav Dedhia"
 };
@@ -32,14 +30,14 @@ function formatExpiry(now: Date) {
   return `${day}, ${time}`;
 }
 
-function PassCard({ expiresAt }: { expiresAt: string }) {
+function PassCard({ venue, title, expiresAt }: { venue: Venue; title: string; expiresAt: string }) {
   return (
     <article
       className="relative mx-[clamp(12px,5.9vw,23px)] mt-[9px] shrink-0 rounded-[15px] px-[15px] pb-[15px] pt-[15px] shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
       style={{ backgroundImage: "linear-gradient(115deg, #e5b234 0%, #e3b130 45%, #d5ae2a 75%, #b7ab21 100%)" }}
     >
-      <p className="text-[14px] font-bold leading-[17px] text-[#f7d47e]">{pass.venue}</p>
-      <h2 className="mt-[3px] text-[22px] font-bold leading-[26px] text-white">{pass.title}</h2>
+      <p className="text-[14px] font-bold leading-[17px] text-[#f7d47e]">{venue.name}</p>
+      <h2 className="mt-[3px] whitespace-nowrap text-[clamp(18px,5.6vw,22px)] font-bold leading-[26px] text-white">{title}</h2>
 
       <span className="absolute right-[14px] top-[23px] flex h-[32px] w-[57px] items-center justify-center rounded-full border-[1.5px] border-[#fff3c4] bg-white/[0.06] text-[12px] font-bold text-[#fff7da] shadow-[0_1px_4px_rgba(120,80,0,0.35)]">
         Qty {pass.quantity}
@@ -67,6 +65,7 @@ function PassCard({ expiresAt }: { expiresAt: string }) {
 
 export default function PassPage() {
   const now = useNow();
+  const { venue } = useSelectedVenue();
 
   return (
     <section
@@ -78,7 +77,11 @@ export default function PassPage() {
         <span className="whitespace-nowrap text-[13.5px] tabular-nums text-[#c9d1db]">{now ? formatNow(now) : ""}</span>
       </header>
 
-      <PassCard expiresAt={now ? formatExpiry(now) : "\u00a0"} />
+      <PassCard
+        venue={venue}
+        title={now ? coverTitle(now) : "\u00a0"}
+        expiresAt={now ? formatExpiry(now) : "\u00a0"}
+      />
 
       <div className="min-h-[8px] flex-1" />
 

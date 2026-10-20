@@ -1,12 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { BottomNav, lato, passesBackground, useNow } from "../shared";
-
-const venues = [
-  { name: "KAMS", address: "102 E Green St, Champaign", image: "/kams-venue.jpg", hours: "Open until 2:00 AM" },
-  { name: "Red Lion", address: "211 E Green St, Champaign", image: "/red-lion-venue.jpg", hours: "Open until 2:00 AM" }
-];
+import { type Venue, venues } from "../venues";
 
 function greeting(date: Date) {
   const hour = date.getHours();
@@ -16,9 +13,12 @@ function greeting(date: Date) {
   return "Good evening";
 }
 
-function VenueCard({ name, address, image, hours }: (typeof venues)[number]) {
+function VenueCard({ slug, name, address, image, hours }: Venue) {
   return (
-    <article className="flex h-[clamp(84px,12.8dvh,102px)] [@media(max-height:520px)]:h-[72px] shrink-0 items-center gap-[clamp(12px,4.1vw,16px)] rounded-[9px] border border-white/[0.28] bg-white/[0.1] p-[2px]">
+    <Link
+      href={`/pass/venues/${slug}`}
+      className="flex h-[clamp(84px,12.8dvh,102px)] [@media(max-height:520px)]:h-[72px] shrink-0 items-center gap-[clamp(12px,4.1vw,16px)] rounded-[9px] border border-white/[0.28] bg-white/[0.1] p-[2px]"
+    >
       <div className="relative aspect-square h-full overflow-hidden rounded-[7px]">
         <Image src={image} alt={`${name} logo`} fill sizes="102px" className="object-cover" priority />
       </div>
@@ -30,7 +30,7 @@ function VenueCard({ name, address, image, hours }: (typeof venues)[number]) {
           {hours}
         </p>
       </div>
-    </article>
+    </Link>
   );
 }
 
@@ -58,7 +58,7 @@ export default function HomePage() {
 
       <div className="mt-[clamp(8px,1.6dvh,14px)] flex shrink-0 flex-col gap-[clamp(8px,1.5dvh,12px)] px-[15px]">
         {venues.map((venue) => (
-          <VenueCard key={venue.name} {...venue} />
+          <VenueCard key={venue.slug} {...venue} />
         ))}
       </div>
 

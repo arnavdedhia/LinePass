@@ -4,7 +4,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "LinePass",
-  description: "A daily guest pass for participating venues."
+  description: "A daily guest pass for participating venues.",
+  appleWebApp: { capable: true, title: "LinePass" }
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
