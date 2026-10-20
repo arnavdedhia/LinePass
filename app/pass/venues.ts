@@ -1,3 +1,7 @@
+export const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"] as const;
+
+export type Weekday = (typeof WEEKDAYS)[number];
+
 export type Venue = {
   slug: string;
   name: string;
@@ -7,6 +11,7 @@ export type Venue = {
   hours: string;
   coverPrice: number;
   glow: string;
+  coverTitles: Partial<Record<Weekday, string>>;
 };
 
 export const venues: Venue[] = [
@@ -18,7 +23,11 @@ export const venues: Venue[] = [
     logo: "/kams-venue.jpg",
     hours: "Open until 2:00 AM",
     coverPrice: 10,
-    glow: "rgba(226, 104, 34, 0.32)"
+    glow: "rgba(226, 104, 34, 0.32)",
+    coverTitles: {
+      Mon: "Cover (Mon, All Day)",
+      Tues: "Cover (Tues, w/TimeWarp Punch Card)"
+    }
   },
   {
     slug: "red-lion",
@@ -28,7 +37,11 @@ export const venues: Venue[] = [
     logo: "/red-lion-logo.jpg",
     hours: "Open until 2:00 AM",
     coverPrice: 10,
-    glow: "rgba(150, 40, 80, 0.3)"
+    glow: "rgba(150, 40, 80, 0.3)",
+    coverTitles: {
+      Mon: "Cover (Mon, All Day)",
+      Tues: "Cover (Tues, All Day)"
+    }
   }
 ];
 

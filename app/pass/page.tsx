@@ -36,14 +36,14 @@ function PassCard({ venue, title, expiresAt }: { venue: Venue; title: string; ex
       className="relative mx-[clamp(12px,5.9vw,23px)] mt-[9px] shrink-0 rounded-[15px] px-[15px] pb-[15px] pt-[15px] shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
       style={{ backgroundImage: "linear-gradient(115deg, #e5b234 0%, #e3b130 45%, #d5ae2a 75%, #b7ab21 100%)" }}
     >
-      <p className="text-[14px] font-bold leading-[17px] text-[#f7d47e]">{venue.name}</p>
-      <h2 className="mt-[3px] whitespace-nowrap text-[clamp(18px,5.6vw,22px)] font-bold leading-[26px] text-white">{title}</h2>
-
-      <span className="absolute right-[14px] top-[23px] flex h-[32px] w-[57px] items-center justify-center rounded-full border-[1.5px] border-[#fff3c4] bg-white/[0.06] text-[12px] font-bold text-[#fff7da] shadow-[0_1px_4px_rgba(120,80,0,0.35)]">
+      <span className="float-right -mr-[1px] ml-[8px] mt-[8px] flex h-[32px] w-[57px] items-center justify-center rounded-full border-[1.5px] border-[#fff3c4] bg-white/[0.06] text-[12px] font-bold text-[#fff7da] shadow-[0_1px_4px_rgba(120,80,0,0.35)]">
         Qty {pass.quantity}
       </span>
 
-      <div className="mx-auto mt-[7px] aspect-square h-[clamp(96px,14dvh,108px)] [@media(max-height:520px)]:h-[76px] rounded-[7px] bg-white p-[clamp(7px,1.1dvh,9px)]">
+      <p className="text-[14px] font-bold leading-[17px] text-[#f7d47e]">{venue.name}</p>
+      <h2 className="mt-[3px] text-[clamp(18px,5.6vw,22px)] font-bold leading-[26px] text-white">{title}</h2>
+
+      <div className="clear-both mx-auto mt-[7px] aspect-square h-[clamp(96px,14dvh,108px)] [@media(max-height:520px)]:h-[76px] rounded-[7px] bg-white p-[clamp(7px,1.1dvh,9px)]">
         <QrCode />
       </div>
 
@@ -79,7 +79,7 @@ export default function PassPage() {
 
       <PassCard
         venue={venue}
-        title={now ? coverTitle(now) : "\u00a0"}
+        title={now ? coverTitle(venue, now) : "\u00a0"}
         expiresAt={now ? formatExpiry(now) : "\u00a0"}
       />
 

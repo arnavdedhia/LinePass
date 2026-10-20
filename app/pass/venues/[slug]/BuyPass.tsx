@@ -68,9 +68,9 @@ export default function BuyPass({ slug }: { slug: string }) {
         <button
           type="button"
           onClick={buyCover}
-          className="flex h-[clamp(58px,8.3dvh,66px)] w-full flex-col justify-center rounded-[8px] border border-white/[0.3] bg-white/[0.13] px-[11px] text-left"
+          className="flex min-h-[clamp(58px,8.3dvh,66px)] w-full flex-col justify-center py-[10px] rounded-[8px] border border-white/[0.3] bg-white/[0.13] px-[11px] text-left"
         >
-          <span className="text-[16px] font-bold leading-[20px] text-white">{now ? coverTitle(now) : "\u00a0"}</span>
+          <span className="text-[16px] font-bold leading-[20px] text-white">{now ? coverTitle(venue, now) : "\u00a0"}</span>
           <span className="mt-[4px] text-[14px] leading-[17px] text-[#e3e7eb]">${venue.coverPrice}</span>
         </button>
       </div>

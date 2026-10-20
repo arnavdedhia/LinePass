@@ -3,6 +3,7 @@
 import { Lato } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { type Venue, WEEKDAYS } from "./venues";
 
 export const lato = Lato({ subsets: ["latin"], weight: ["400", "700"], style: ["normal", "italic"] });
 
@@ -13,16 +14,17 @@ export const passesBackground = {
 
 export const RESET_HOUR = 4;
 
-export function barDayWeekday(now: Date) {
-  return new Date(now.getTime() - RESET_HOUR * 60 * 60 * 1000).toLocaleDateString("en-US", { weekday: "short" });
+function barDay(now: Date) {
+  return new Date(now.getTime() - RESET_HOUR * 60 * 60 * 1000);
 }
 
 export function barDayDate(now: Date) {
-  return new Date(now.getTime() - RESET_HOUR * 60 * 60 * 1000).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return barDay(now).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export function coverTitle(now: Date) {
-  return `Cover (${barDayWeekday(now)}, All Day)`;
+export function coverTitle(venue: Venue, now: Date) {
+  const weekday = WEEKDAYS[barDay(now).getDay()];
+  return venue.coverTitles[weekday] ?? `Cover (${weekday}, All Day)`;
 }
 
 export function useNow() {
