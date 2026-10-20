@@ -1,12 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [pending, setPending] = useState(false);
+
+  useEffect(() => router.prefetch("/pass/home"), [router]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -23,7 +25,7 @@ export default function LoginPage() {
         setError(result.error ?? "Unable to log in.");
         return;
       }
-      router.push("/pass");
+      router.push("/pass/home");
     } catch {
       setError("Unable to connect to LinePass.");
     } finally {
