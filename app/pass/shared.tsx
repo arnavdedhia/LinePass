@@ -1,6 +1,7 @@
 "use client";
 
 import { Lato } from "next/font/google";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export const lato = Lato({ subsets: ["latin"], weight: ["400", "700"], style: ["normal", "italic"] });
@@ -68,35 +69,71 @@ export function LinePassMark({ className, outline = false }: { className?: strin
   );
 }
 
-function NavItem({ label, icon, active = false }: { label: string; icon: React.ReactNode; active?: boolean }) {
-  return (
-    <div className={`flex flex-col items-center ${active ? "text-white" : "text-[#8b98a7]"}`}>
+function NavItem({
+  label,
+  icon,
+  active = false,
+  href
+}: {
+  label: string;
+  icon: React.ReactNode;
+  active?: boolean;
+  href?: string;
+}) {
+  const className = `flex flex-col items-center ${active ? "text-white" : "text-[#8b98a7]"}`;
+  const content = (
+    <>
       <div className="flex h-[24px] items-center justify-center">{icon}</div>
       <span className="mt-[4px] text-[11px] leading-[13px]">{label}</span>
-    </div>
+    </>
+  );
+
+  if (!href) return <div className={className}>{content}</div>;
+
+  return (
+    <Link href={href} className={className} aria-current={active ? "page" : undefined}>
+      {content}
+    </Link>
   );
 }
 
-export function BottomNav() {
+export function BottomNav({ active }: { active: "venues" | "passes" }) {
   return (
     <nav className="grid h-[clamp(56px,10.3dvh,82px)] shrink-0 [@media(max-height:520px)]:h-[50px] grid-cols-5 border-t border-white/[0.04] bg-[#0a1f34] pt-[4px]">
       <NavItem
+        href="/pass/home"
+        active={active === "venues"}
         label="Venues"
         icon={
-          <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <circle cx="12" cy="12" r="10" />
-            <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" fill="currentColor" strokeLinejoin="round" />
-          </svg>
+          active === "venues" ? (
+            <svg width="22" height="22" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="11" fill="currentColor" />
+              <path d="m16 8-2.4 5.6L8 16l2.4-5.6L16 8Z" fill="#0a1f34" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <circle cx="12" cy="12" r="10" />
+              <path d="m15.5 8.5-2 5-5 2 2-5 5-2Z" fill="currentColor" strokeLinejoin="round" />
+            </svg>
+          )
         }
       />
       <NavItem
-        active
+        href="/pass"
+        active={active === "passes"}
         label="My Passes"
         icon={
-          <svg width="23" height="17" viewBox="0 0 23 17" fill="currentColor">
-            <path d="M2 0h8.6v17H2a2 2 0 0 1-2-2v-4A2.5 2.5 0 0 0 0 6V2a2 2 0 0 1 2-2Z" />
-            <path d="M12.4 0H21a2 2 0 0 1 2 2v4a2.5 2.5 0 0 0 0 5v4a2 2 0 0 1-2 2h-8.6V0Z" />
-          </svg>
+          active === "passes" ? (
+            <svg width="23" height="17" viewBox="0 0 23 17" fill="currentColor">
+              <path d="M2 0h8.6v17H2a2 2 0 0 1-2-2v-4A2.5 2.5 0 0 0 0 6V2a2 2 0 0 1 2-2Z" />
+              <path d="M12.4 0H21a2 2 0 0 1 2 2v4a2.5 2.5 0 0 0 0 5v4a2 2 0 0 1-2 2h-8.6V0Z" />
+            </svg>
+          ) : (
+            <svg width="24" height="18" viewBox="0 0 24 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
+              <path d="M2.8.8h18.4a2 2 0 0 1 2 2v3.6a2.6 2.6 0 0 0 0 5.2v3.6a2 2 0 0 1-2 2H2.8a2 2 0 0 1-2-2v-3.6a2.6 2.6 0 0 0 0-5.2V2.8a2 2 0 0 1 2-2Z" />
+              <path d="M9 6.5h6M9 11.5h6" strokeLinecap="round" />
+            </svg>
+          )
         }
       />
       <div className="flex flex-col items-center text-[#8b98a7]">

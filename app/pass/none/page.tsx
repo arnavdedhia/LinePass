@@ -109,7 +109,7 @@ export default function NoPassPage() {
         </button>
       </div>
 
-      <BottomNav />
+      <BottomNav active="passes" />
     </section>
   );
 }

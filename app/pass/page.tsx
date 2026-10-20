@@ -108,7 +108,7 @@ export default function PassPage() {
         </div>
       </div>
 
-      <BottomNav />
+      <BottomNav active="passes" />
     </section>
   );
 }
