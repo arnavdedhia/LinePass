@@ -35,7 +35,10 @@ const supabase = createClient(url, key, {
 const passwordHash = await bcrypt.hash("demo123", 12);
 const { error } = await supabase
   .from("users")
-  .upsert({ username: "demo", password_hash: passwordHash }, { onConflict: "username" });
+  .upsert(
+    { username: "demo", password_hash: passwordHash, name: "Demo User", device_token_hash: null, active: true },
+    { onConflict: "username" }
+  );
 
 if (error) throw error;
 console.log("Demo user saved. Username: demo");

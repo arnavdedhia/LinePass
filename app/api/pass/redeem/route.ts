@@ -20,10 +20,10 @@ export async function POST(request: Request) {
   const supabase = getSupabaseServer();
   const { data, error } = await supabase
     .from("passes")
-    .update({ status: "redeemed", redeemed_at: new Date().toISOString(), redeemed_by: staffId })
+    .update({ redeemed_at: new Date().toISOString(), redeemed_by: staffId })
     .eq("id", passId)
-    .eq("bar_day_date", getBarDayDate())
-    .eq("status", "active")
+    .eq("bar_day", getBarDayDate())
+    .is("redeemed_at", null)
     .select("id")
     .maybeSingle();
   if (error) throw error;

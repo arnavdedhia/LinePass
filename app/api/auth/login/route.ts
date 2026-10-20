@@ -1,4 +1,6 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
 
@@ -27,13 +29,21 @@ export async function POST(request: Request) {
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     return NextResponse.json({ error: "Invalid username or password." }, { status: 401 });
   }
+  if (!user.active) {
+    return NextResponse.json({ error: "This account has been deactivated." }, { status: 403 });
+  }
 
-  const deviceId = request.headers.get("x-linepass-device") ?? crypto.randomUUID();
-  if (user.device_id && user.device_id !== deviceId) {
+  const deviceId =
+    request.headers.get("x-linepass-device") ?? (await cookies()).get("linepass_device_id")?.value ?? crypto.randomUUID();
+  const deviceTokenHash = createHash("sha256").update(deviceId).digest("hex");
+  if (user.device_token_hash && user.device_token_hash !== deviceTokenHash) {
     return NextResponse.json({ error: "This account is already bound to another device." }, { status: 403 });
   }
-  if (!user.device_id) {
-    const { error: updateError } = await supabase.from("users").update({ device_id: deviceId }).eq("id", user.id);
+  if (!user.device_token_hash) {
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ device_token_hash: deviceTokenHash })
+      .eq("id", user.id);
     if (updateError) throw updateError;
   }
 

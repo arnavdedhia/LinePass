@@ -6,10 +6,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed:demo": "node scripts/seed-demo-user.mjs"
+    "seed:demo": "node scripts/seed-demo-user.mjs",
+    "db:check": "node scripts/check-supabase.mjs"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.47.10",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
     "bcryptjs": "^2.4.3",
     "next": "^14.2.15",
     "react": "^18.3.1",

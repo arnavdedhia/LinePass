@@ -10,9 +10,12 @@
 - `app/layout.tsx`, `app/globals.css` — shared layout + Tailwind styles.
 
 ### Basic database tables (Supabase/Postgres)
-- `users` — account, password hash, device lock info (one account ↔ one browser/device).
-- `passes` — one pass per user per bar day (`bar_day_date`, status, redeemed_at).
-- `redemptions` (or fields on `passes`) — redemption outcome + staff action metadata.
+- `users` — account, name, password hash, hashed device token (one account ↔ one browser/device), active flag.
+- `venues` — KAMS, Red Lion, etc.
+- `cover_options` — the cover title and price for each venue on each weekday.
+- `passes` — one pass per user per bar day (`bar_day`, venue, title, price, `redeemed_at`, `redeemed_by`).
+
+Set up: run `supabase/schema.sql` then `supabase/seed.sql` in the Supabase SQL Editor, fill in `.env.local`, and run `npm run db:check`.
 
 ### Main features per page
 - **Login**: authenticate username/password, bind account to first browser/device, block others.
