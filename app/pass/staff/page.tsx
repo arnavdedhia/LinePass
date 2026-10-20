@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useStartRedeem } from "../RedeemTransition";
 import { lato, QrCode, useNow } from "../shared";
 
 const EMOJIS = [
@@ -66,6 +68,10 @@ function WarningIcon() {
 
 export default function StaffPage() {
   const now = useNow();
+  const router = useRouter();
+  const startRedeem = useStartRedeem();
+
+  useEffect(() => router.prefetch("/pass/none"), [router]);
 
   return (
     <section className={`${lato.className} fixed inset-0 z-50 flex flex-col items-center overflow-hidden bg-[#101a24] text-white`}>
@@ -96,6 +102,7 @@ export default function StaffPage() {
 
         <button
           type="button"
+          onClick={startRedeem}
           className="mt-[clamp(10px,1.8dvh,15px)] flex h-[clamp(46px,6.5dvh,52px)] [@media(max-height:520px)]:h-[42px] w-full items-center justify-center rounded-[15px] bg-[#0682fe] text-[16px] font-bold text-white"
         >
           Redeem

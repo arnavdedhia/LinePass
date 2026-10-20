@@ -1,0 +1,198 @@
+.sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #252b32;
+  animation: sheetIn 420ms linear both;
+}
+
+.leaving {
+  animation: sheetOut 325ms linear both;
+}
+
+.stage {
+  --s: min(51vw, 200px, 30dvh);
+  position: relative;
+  width: var(--s);
+  height: var(--s);
+}
+
+.mark {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.ringMove,
+.checkMove {
+  transform-origin: 100px 100px;
+}
+
+.ringMove {
+  animation: ringMove 620ms 840ms ease-in both;
+}
+
+.checkMove {
+  animation: checkMove 620ms 840ms ease-in both;
+}
+
+.ring {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 17;
+  stroke-dasharray: 0 100;
+  animation:
+    ringDraw 270ms 100ms linear forwards,
+    ringBreak 620ms 840ms linear forwards;
+}
+
+.check {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 14;
+  stroke-linejoin: miter;
+  stroke-dasharray: 0 100;
+  animation:
+    draw 180ms 340ms ease-out forwards,
+    checkBreak 620ms 840ms linear forwards;
+}
+
+.logo {
+  position: absolute;
+  left: 26.75%;
+  top: 26%;
+  width: 46.5%;
+  height: 48%;
+  overflow: visible;
+  animation: logoGrow 500ms 1620ms ease-out both;
+}
+
+.l1,
+.l2 {
+  fill: #fff;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.l1 {
+  animation: pieceIn 140ms 1390ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.l2 {
+  stroke: #252b32;
+  stroke-width: 10;
+  paint-order: stroke;
+  animation: pieceIn 140ms 1460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.tagline {
+  position: absolute;
+  top: 117.5%;
+  left: 50%;
+  margin: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  font-size: calc(var(--s) * 0.105);
+  font-style: italic;
+  font-weight: 700;
+  line-height: 1;
+  color: #5e646b;
+  animation:
+    fadeIn 150ms 480ms both,
+    fadeOut 160ms 1170ms forwards;
+}
+
+@keyframes sheetIn {
+  0% { transform: translateY(100%); }
+  5% { transform: translateY(86%); }
+  11% { transform: translateY(64%); }
+  23% { transform: translateY(37%); }
+  40% { transform: translateY(27%); }
+  52% { transform: translateY(19.5%); }
+  70% { transform: translateY(8.5%); }
+  82% { transform: translateY(3.8%); }
+  94% { transform: translateY(1.5%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes sheetOut {
+  0% { transform: translateY(0); }
+  15% { transform: translateY(3.7%); }
+  31% { transform: translateY(6.6%); }
+  38% { transform: translateY(8.6%); }
+  54% { transform: translateY(16%); }
+  62% { transform: translateY(23%); }
+  69% { transform: translateY(31.6%); }
+  77% { transform: translateY(48.8%); }
+  92% { transform: translateY(73.6%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes ringDraw {
+  0% { stroke-dasharray: 0 100; }
+  7% { stroke-dasharray: 10 90; }
+  26% { stroke-dasharray: 35 65; }
+  44% { stroke-dasharray: 60 40; }
+  63% { stroke-dasharray: 70 30; }
+  81% { stroke-dasharray: 93 7; }
+  100% { stroke-dasharray: 100 0; }
+}
+
+@keyframes draw {
+  from { stroke-dasharray: 0 100; }
+  to { stroke-dasharray: 100 0; }
+}
+
+@keyframes ringBreak {
+  0% { stroke-dasharray: 100 0; stroke-dashoffset: 0; }
+  5% { stroke-dasharray: 40 60; stroke-dashoffset: -25; }
+  11% { stroke-dasharray: 25 75; stroke-dashoffset: -60; }
+  23% { stroke-dasharray: 15 85; stroke-dashoffset: -80; }
+  35% { stroke-dasharray: 7 93; stroke-dashoffset: -86; }
+  100% { stroke-dasharray: 4 96; stroke-dashoffset: -88; }
+}
+
+@keyframes checkBreak {
+  0% { stroke-dasharray: 100 0; stroke-dashoffset: 0; }
+  6% { stroke-dasharray: 18 82; stroke-dashoffset: -60; }
+  100% { stroke-dasharray: 10 90; stroke-dashoffset: -66; }
+}
+
+@keyframes ringMove {
+  0% { transform: none; opacity: 1; }
+  35% { transform: translate(0, -10px) scale(0.85); }
+  75% { transform: translate(12px, -60px) scale(0.6); opacity: 1; }
+  100% { transform: scale(0.4); opacity: 0; }
+}
+
+@keyframes checkMove {
+  0% { transform: none; opacity: 1; }
+  30% { transform: translate(8px, -6px) rotate(-15deg); }
+  75% { transform: translate(-6px, -55px) rotate(-30deg); opacity: 1; }
+  100% { transform: scale(0.4); opacity: 0; }
+}
+
+@keyframes pieceIn {
+  from { opacity: 0; transform: translateY(-30px) scale(0.3); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes logoGrow {
+  from { transform: scale(0.85); }
+  to { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}

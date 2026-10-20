@@ -3,7 +3,7 @@
 import { Lato } from "next/font/google";
 import { useEffect, useState } from "react";
 
-export const lato = Lato({ subsets: ["latin"], weight: ["400", "700"] });
+export const lato = Lato({ subsets: ["latin"], weight: ["400", "700"], style: ["normal", "italic"] });
 
 export const passesBackground = {
   backgroundImage:
