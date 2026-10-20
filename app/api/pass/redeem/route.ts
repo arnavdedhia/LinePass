@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getBarDayDate } from "../../../../lib/barDay";
-import { getSupabaseServer } from "../../../../lib/supabase";
+import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
 
 export async function POST(request: Request) {
   const staffId = (await cookies()).get("linepass_user_id")?.value;
@@ -9,6 +9,13 @@ export async function POST(request: Request) {
   const body = await request.json();
   const passId = typeof body.passId === "string" ? body.passId.trim() : "";
   if (!passId) return NextResponse.json({ error: "A pass ID is required." }, { status: 400 });
+
+  if (!hasSupabaseConfig()) {
+    if (passId !== "local-demo-pass") {
+      return NextResponse.json({ error: "Pass is invalid, expired, or already redeemed." }, { status: 409 });
+    }
+    return NextResponse.json({ ok: true, message: "The local demo pass has been redeemed." });
+  }
 
   const supabase = getSupabaseServer();
   const { data, error } = await supabase

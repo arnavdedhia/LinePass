@@ -1,11 +1,22 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { getSupabaseServer } from "../../../../lib/supabase";
+import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const username = typeof body.username === "string" ? body.username.trim() : "";
   const password = typeof body.password === "string" ? body.password : "";
+  if (!hasSupabaseConfig()) {
+    const response = NextResponse.json({ ok: true, local: true });
+    response.cookies.set("linepass_user_id", "local-demo-user", {
+      httpOnly: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      path: "/"
+    });
+    return response;
+  }
+
   if (!username || !password) {
     return NextResponse.json({ error: "Username and password are required." }, { status: 400 });
   }
@@ -27,7 +38,17 @@ export async function POST(request: Request) {
   }
 
   const response = NextResponse.json({ ok: true });
-  response.cookies.set("linepass_user_id", user.id, { httpOnly: true, sameSite: "lax", secure: true, path: "/" });
-  response.cookies.set("linepass_device_id", deviceId, { httpOnly: true, sameSite: "lax", secure: true, path: "/" });
+  response.cookies.set("linepass_user_id", user.id, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/"
+  });
+  response.cookies.set("linepass_device_id", deviceId, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/"
+  });
   return response;
 }
