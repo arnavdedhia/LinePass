@@ -26,7 +26,8 @@ export const venues: Venue[] = [
     glow: "rgba(226, 104, 34, 0.32)",
     coverTitles: {
       Mon: "Cover (Mon, All Day)",
-      Tues: "Cover (Tues, w/TimeWarp Punch Card)"
+      Tues: "Cover (Tues, w/TimeWarp Punch Card)",
+      Wed: "Cover (Wed, All Day)"
     }
   },
   {
@@ -40,7 +41,8 @@ export const venues: Venue[] = [
     glow: "rgba(150, 40, 80, 0.3)",
     coverTitles: {
       Mon: "Cover (Mon, All Day)",
-      Tues: "Cover (Tues, All Day)"
+      Tues: "Cover (Tues, All Day)",
+      Wed: "Cover (Wed, iCard)"
     }
   }
 ];
