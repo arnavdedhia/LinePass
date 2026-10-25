@@ -1,4 +1,4 @@
-export const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"] as const;
+export const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"] as const;
 
 export type Weekday = (typeof WEEKDAYS)[number];
 
@@ -11,7 +11,7 @@ export type Venue = {
   hours: string;
   coverPrice: number;
   glow: string;
-  coverTitles: Partial<Record<Weekday, string>>;
+  coverTitles: Partial<Record<Weekday, string[]>>;
 };
 
 export const venues: Venue[] = [
@@ -25,9 +25,10 @@ export const venues: Venue[] = [
     coverPrice: 10,
     glow: "rgba(226, 104, 34, 0.32)",
     coverTitles: {
-      Mon: "Cover (Mon, All Day)",
-      Tues: "Cover (Tues, w/TimeWarp Punch Card)",
-      Wed: "Cover (Wed, All Day)"
+      Mon: ["Cover (Mon, All Day)"],
+      Tues: ["Cover (Tues, w/TimeWarp Punch Card)"],
+      Wed: ["Cover (Wed, All Day)"],
+      Thurs: ["Cover (Senior Night, All Day | 21+)", "Cover (Senior Night, All Day | 19+)"]
     }
   },
   {
@@ -40,9 +41,9 @@ export const venues: Venue[] = [
     coverPrice: 10,
     glow: "rgba(150, 40, 80, 0.3)",
     coverTitles: {
-      Mon: "Cover (Mon, All Day)",
-      Tues: "Cover (Tues, All Day)",
-      Wed: "Cover (Wed, iCard)"
+      Mon: ["Cover (Mon, All Day)"],
+      Tues: ["Cover (Tues, All Day)"],
+      Wed: ["Cover (Wed, iCard)"]
     }
   }
 ];
@@ -53,4 +54,4 @@ export function getVenue(slug: string) {
   return venues.find((venue) => venue.slug === slug);
 }
 
-export const PASS_ROUTES = ["/pass", "/pass/staff", "/pass/none", "/pass/home", ...venues.map((venue) => `/pass/venues/${venue.slug}`)];
+export const PASS_ROUTES = ["/pass", "/pass/staff", "/pass/none", "/pass/home", "/pass/login", ...venues.map((venue) => `/pass/venues/${venue.slug}`)];

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BottomNav, coverTitle, LinePassMark, lato, passesBackground, QrCode, RESET_HOUR, useNow } from "./shared";
+import { BottomNav, coverTitles, LinePassMark, lato, passesBackground, QrCode, RESET_HOUR, useNow } from "./shared";
 import { useSelectedVenue } from "./VenueContext";
 import type { Venue } from "./venues";
 
@@ -65,7 +65,9 @@ function PassCard({ venue, title, expiresAt }: { venue: Venue; title: string; ex
 
 export default function PassPage() {
   const now = useNow();
-  const { venue } = useSelectedVenue();
+  const { venue, coverTitle } = useSelectedVenue();
+  const todaysTitles = now ? coverTitles(venue, now) : [];
+  const title = coverTitle && todaysTitles.includes(coverTitle) ? coverTitle : todaysTitles[0];
 
   return (
     <section
@@ -79,7 +81,7 @@ export default function PassPage() {
 
       <PassCard
         venue={venue}
-        title={now ? coverTitle(venue, now) : "\u00a0"}
+        title={title ?? "\u00a0"}
         expiresAt={now ? formatExpiry(now) : "\u00a0"}
       />
 

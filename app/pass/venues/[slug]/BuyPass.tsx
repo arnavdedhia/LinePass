@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BottomNav, barDayDate, coverTitle, lato, useNow } from "../../shared";
+import { BottomNav, barDayDate, coverTitles, lato, useNow } from "../../shared";
 import { useSelectedVenue } from "../../VenueContext";
 import { getVenue } from "../../venues";
 
@@ -11,11 +11,11 @@ export default function BuyPass({ slug }: { slug: string }) {
   const venue = getVenue(slug)!;
   const now = useNow();
   const router = useRouter();
-  const { selectVenue } = useSelectedVenue();
+  const { selectCover, signedIn } = useSelectedVenue();
 
-  const buyCover = () => {
-    selectVenue(venue.slug);
-    router.push("/pass");
+  const buyCover = (title: string) => {
+    selectCover(venue.slug, title);
+    router.push(signedIn ? "/pass" : "/pass/login");
   };
 
   return (
@@ -64,15 +64,18 @@ export default function BuyPass({ slug }: { slug: string }) {
         {now ? `Today, ${barDayDate(now)}` : "\u00a0"}
       </h2>
 
-      <div className="mt-[clamp(8px,1.6dvh,13px)] shrink-0 px-[15px]">
-        <button
-          type="button"
-          onClick={buyCover}
-          className="flex min-h-[clamp(58px,8.3dvh,66px)] w-full flex-col justify-center py-[10px] rounded-[8px] border border-white/[0.3] bg-white/[0.13] px-[11px] text-left"
-        >
-          <span className="text-[16px] font-bold leading-[20px] text-white">{now ? coverTitle(venue, now) : "\u00a0"}</span>
-          <span className="mt-[4px] text-[14px] leading-[17px] text-[#e3e7eb]">${venue.coverPrice}</span>
-        </button>
+      <div className="mt-[clamp(8px,1.6dvh,13px)] flex shrink-0 flex-col gap-[clamp(8px,1.6dvh,13px)] px-[15px]">
+        {(now ? coverTitles(venue, now) : ["\u00a0"]).map((title) => (
+          <button
+            key={title}
+            type="button"
+            onClick={() => now && buyCover(title)}
+            className="flex min-h-[clamp(58px,8.3dvh,66px)] w-full flex-col justify-center rounded-[8px] border border-white/[0.3] bg-white/[0.13] px-[11px] py-[10px] text-left"
+          >
+            <span className="text-[16px] font-bold leading-[20px] text-white">{title}</span>
+            <span className="mt-[4px] text-[14px] leading-[17px] text-[#e3e7eb]">${venue.coverPrice}</span>
+          </button>
+        ))}
       </div>
 
       <div className="flex-1" />

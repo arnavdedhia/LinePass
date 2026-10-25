@@ -4,6 +4,15 @@ import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
 
+function markSignedIn(response: NextResponse) {
+  response.cookies.set("linepass_signed_in", "1", {
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/"
+  });
+  return response;
+}
+
 export async function POST(request: Request) {
   const body = await request.json();
   const username = typeof body.username === "string" ? body.username.trim() : "";
@@ -16,7 +25,7 @@ export async function POST(request: Request) {
       secure: process.env.NODE_ENV === "production",
       path: "/"
     });
-    return response;
+    return markSignedIn(response);
   }
 
   if (!username || !password) {
@@ -60,5 +69,5 @@ export async function POST(request: Request) {
     secure: process.env.NODE_ENV === "production",
     path: "/"
   });
-  return response;
+  return markSignedIn(response);
 }

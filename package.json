@@ -7,6 +7,7 @@
     "start": "next start",
     "lint": "next lint",
     "seed:demo": "node scripts/seed-demo-user.mjs",
+    "user:create": "node scripts/create-user.mjs",
     "db:check": "node scripts/check-supabase.mjs"
   },
   "dependencies": {

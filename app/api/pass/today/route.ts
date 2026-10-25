@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { getBarDayDate } from "../../../../lib/barDay";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
 
-const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 const DEFAULT_PRICE_CENTS = 1000;
 const PASS_COLUMNS = "id, title, bar_day, redeemed_at, venues(slug, name)";
 
@@ -11,8 +11,10 @@ export async function GET(request: Request) {
   const userId = (await cookies()).get("linepass_user_id")?.value;
   if (!userId) return NextResponse.json({ error: "You must log in first." }, { status: 401 });
 
-  const venueSlug = new URL(request.url).searchParams.get("venue")?.trim();
+  const params = new URL(request.url).searchParams;
+  const venueSlug = params.get("venue")?.trim();
   if (!venueSlug) return NextResponse.json({ error: "A venue is required." }, { status: 400 });
+  const requestedTitle = params.get("option")?.trim();
 
   const barDay = getBarDayDate();
   const weekday = new Date(`${barDay}T00:00:00Z`).getUTCDay();
@@ -40,13 +42,17 @@ export async function GET(request: Request) {
   if (venueError) throw venueError;
   if (!venue) return NextResponse.json({ error: "Unknown venue." }, { status: 404 });
 
-  const { data: option, error: optionError } = await supabase
+  const { data: options, error: optionsError } = await supabase
     .from("cover_options")
     .select("title, price_cents")
     .eq("venue_id", venue.id)
     .eq("weekday", weekday)
-    .maybeSingle();
-  if (optionError) throw optionError;
+    .order("created_at");
+  if (optionsError) throw optionsError;
+  if (requestedTitle && options.length > 0 && !options.some((candidate) => candidate.title === requestedTitle)) {
+    return NextResponse.json({ error: "That cover isn't offered tonight." }, { status: 400 });
+  }
+  const option = options.find((candidate) => candidate.title === requestedTitle) ?? options[0];
 
   const { data, error } = await supabase
     .from("passes")

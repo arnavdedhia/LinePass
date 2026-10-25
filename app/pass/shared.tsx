@@ -22,9 +22,9 @@ export function barDayDate(now: Date) {
   return barDay(now).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export function coverTitle(venue: Venue, now: Date) {
+export function coverTitles(venue: Venue, now: Date) {
   const weekday = WEEKDAYS[barDay(now).getDay()];
-  return venue.coverTitles[weekday] ?? `Cover (${weekday}, All Day)`;
+  return venue.coverTitles[weekday] ?? [`Cover (${weekday}, All Day)`];
 }
 
 export function useNow() {

@@ -31,9 +31,13 @@ create table if not exists public.cover_options (
   weekday smallint not null check (weekday between 0 and 6),
   title text not null,
   price_cents integer not null check (price_cents >= 0),
-  created_at timestamptz not null default now(),
-  unique (venue_id, weekday)
+  created_at timestamptz not null default now()
 );
+
+-- A venue can offer several covers on the same night, but not the same title twice.
+alter table public.cover_options drop constraint if exists cover_options_venue_id_weekday_key;
+create unique index if not exists cover_options_venue_weekday_title_key
+  on public.cover_options (venue_id, weekday, title);
 
 -- One pass per user per bar day; redeemed_at stays null until door staff redeem it.
 create table if not exists public.passes (

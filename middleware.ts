@@ -15,9 +15,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (request.cookies.has("linepass_user_id")) return NextResponse.redirect(new URL("/pass/home", request.url));
-  if (pathname === "/") return NextResponse.redirect(new URL("/login", request.url));
-  return NextResponse.next();
+  return NextResponse.redirect(new URL("/pass/home", request.url));
 }
 
 export const config = {

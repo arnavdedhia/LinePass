@@ -16,11 +16,12 @@ from (
     ('kams', 1, 'Cover (Mon, All Day)', 1000),
     ('kams', 2, 'Cover (Tues, w/TimeWarp Punch Card)', 1000),
     ('kams', 3, 'Cover (Wed, All Day)', 1000),
+    ('kams', 4, 'Cover (Senior Night, All Day | 21+)', 1000),
+    ('kams', 4, 'Cover (Senior Night, All Day | 19+)', 1000),
     ('red-lion', 1, 'Cover (Mon, All Day)', 1000),
     ('red-lion', 2, 'Cover (Tues, All Day)', 1000),
     ('red-lion', 3, 'Cover (Wed, iCard)', 1000)
 ) as options (slug, weekday, title, price_cents)
 join public.venues on venues.slug = options.slug
-on conflict (venue_id, weekday) do update set
-  title = excluded.title,
+on conflict (venue_id, weekday, title) do update set
   price_cents = excluded.price_cents;
