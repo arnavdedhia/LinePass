@@ -1,3 +1,31 @@
+# Dependencies
 node_modules/
+
+# Next.js / TypeScript build output
 .next/
-.env.local
+out/
+build/
+*.tsbuildinfo
+
+# Secrets: every .env file except the placeholder template
+.env
+.env.*
+!.env.example
+
+# Vercel and Supabase local state
+.vercel/
+supabase/.temp/
+supabase/.branches/
+
+# Keys and certificates
+*.pem
+*.key
+*.p12
+
+# Logs and OS / editor files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
