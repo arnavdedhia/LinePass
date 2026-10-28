@@ -1,14 +1,14 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { getBarDayDate } from "../../../../lib/barDay";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
+import { getSessionUserId } from "../../../../lib/userSession";
 
 const WEEKDAYS = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
 const DEFAULT_PRICE_CENTS = 1000;
 const PASS_COLUMNS = "id, title, bar_day, redeemed_at, venues(slug, name)";
 
 export async function GET(request: Request) {
-  const userId = (await cookies()).get("linepass_user_id")?.value;
+  const userId = getSessionUserId();
   if (!userId) return NextResponse.json({ error: "You must log in first." }, { status: 401 });
 
   const params = new URL(request.url).searchParams;

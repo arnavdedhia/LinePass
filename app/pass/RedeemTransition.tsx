@@ -6,8 +6,8 @@ import styles from "./redeem.module.css";
 import { lato } from "./shared";
 
 const NO_PASS_PATH = "/pass/none";
-const NAVIGATE_AT_MS = 1950;
-const EXIT_AT_MS = 2120;
+const NAVIGATE_AT_MS = 1520;
+const EXIT_AT_MS = 1860;
 
 type Phase = "idle" | "playing" | "leaving";
 
@@ -22,7 +22,7 @@ function RedeemOverlay({ leaving, onDone }: { leaving: boolean; onDone: () => vo
     <div
       className={`${lato.className} ${styles.sheet} ${leaving ? styles.leaving : ""}`}
       onAnimationEnd={(event) => {
-        if (leaving && event.target === event.currentTarget) onDone();
+        if (leaving && event.target === event.currentTarget && event.animationName.includes("sheetOut")) onDone();
       }}
       aria-live="polite"
     >
@@ -67,6 +67,12 @@ export function RedeemProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (phase === "playing" && readyToExit && pathname === NO_PASS_PATH) setPhase("leaving");
   }, [phase, readyToExit, pathname]);
+
+  useEffect(() => {
+    if (phase !== "leaving") return;
+    const id = window.setTimeout(() => setPhase("idle"), 240);
+    return () => window.clearTimeout(id);
+  }, [phase]);
 
   return (
     <StartRedeemContext.Provider value={start}>

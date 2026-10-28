@@ -1,31 +1,18 @@
-import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import bcrypt from "bcryptjs";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
+import { deviceHashMatches, hashDeviceToken, newDeviceToken, readDeviceToken, startSession } from "../../../../lib/userSession";
 
-function markSignedIn(response: NextResponse) {
-  response.cookies.set("linepass_signed_in", "1", {
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/"
-  });
-  return response;
-}
+const BOUND_ELSEWHERE = "This account is already bound to another device.";
 
 export async function POST(request: Request) {
   const body = await request.json();
   const username = typeof body.username === "string" ? body.username.trim() : "";
   const password = typeof body.password === "string" ? body.password : "";
+  const existingDeviceToken = readDeviceToken();
+
   if (!hasSupabaseConfig()) {
-    const response = NextResponse.json({ ok: true, local: true });
-    response.cookies.set("linepass_user_id", "local-demo-user", {
-      httpOnly: true,
-      sameSite: "lax",
-      secure: process.env.NODE_ENV === "production",
-      path: "/"
-    });
-    return markSignedIn(response);
+    return startSession(NextResponse.json({ ok: true, local: true }), "local-demo-user", existingDeviceToken ?? newDeviceToken());
   }
 
   if (!username || !password) {
@@ -33,7 +20,11 @@ export async function POST(request: Request) {
   }
 
   const supabase = getSupabaseServer();
-  const { data: user, error } = await supabase.from("users").select("*").eq("username", username).maybeSingle();
+  const { data: user, error } = await supabase
+    .from("users")
+    .select("id, password_hash, active, device_token_hash")
+    .eq("username", username)
+    .maybeSingle();
   if (error) throw error;
   if (!user || !(await bcrypt.compare(password, user.password_hash))) {
     return NextResponse.json({ error: "Invalid username or password." }, { status: 401 });
@@ -42,32 +33,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "This account has been deactivated." }, { status: 403 });
   }
 
-  const deviceId =
-    request.headers.get("x-linepass-device") ?? (await cookies()).get("linepass_device_id")?.value ?? crypto.randomUUID();
-  const deviceTokenHash = createHash("sha256").update(deviceId).digest("hex");
-  if (user.device_token_hash && user.device_token_hash !== deviceTokenHash) {
-    return NextResponse.json({ error: "This account is already bound to another device." }, { status: 403 });
-  }
-  if (!user.device_token_hash) {
-    const { error: updateError } = await supabase
+  let deviceToken = existingDeviceToken;
+  if (user.device_token_hash) {
+    if (!deviceToken || !deviceHashMatches(deviceToken, user.device_token_hash)) {
+      return NextResponse.json({ error: BOUND_ELSEWHERE }, { status: 403 });
+    }
+  } else {
+    deviceToken ??= newDeviceToken();
+    const { data: bound, error: bindError } = await supabase
       .from("users")
-      .update({ device_token_hash: deviceTokenHash })
-      .eq("id", user.id);
-    if (updateError) throw updateError;
+      .update({ device_token_hash: hashDeviceToken(deviceToken) })
+      .eq("id", user.id)
+      .is("device_token_hash", null)
+      .select("id")
+      .maybeSingle();
+    if (bindError) throw bindError;
+    if (!bound) return NextResponse.json({ error: BOUND_ELSEWHERE }, { status: 403 });
   }
 
-  const response = NextResponse.json({ ok: true });
-  response.cookies.set("linepass_user_id", user.id, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/"
-  });
-  response.cookies.set("linepass_device_id", deviceId, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/"
-  });
-  return markSignedIn(response);
+  return startSession(NextResponse.json({ ok: true }), user.id, deviceToken);
 }

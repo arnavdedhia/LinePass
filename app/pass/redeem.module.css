@@ -6,11 +6,11 @@
   align-items: center;
   justify-content: center;
   background: #252b32;
-  animation: sheetIn 420ms linear both;
+  animation: sheetIn 300ms linear both;
 }
 
 .leaving {
-  animation: sheetOut 325ms linear both;
+  animation: sheetOut 220ms linear both;
 }
 
 .stage {
@@ -34,11 +34,11 @@
 }
 
 .ringMove {
-  animation: ringMove 620ms 840ms ease-in both;
+  animation: ringMove 480ms 780ms ease-in both;
 }
 
 .checkMove {
-  animation: checkMove 620ms 840ms ease-in both;
+  animation: checkMove 480ms 780ms ease-in both;
 }
 
 .ring {
@@ -47,8 +47,8 @@
   stroke-width: 17;
   stroke-dasharray: 0 100;
   animation:
-    ringDraw 270ms 100ms linear forwards,
-    ringBreak 620ms 840ms linear forwards;
+    ringDraw 230ms 70ms linear forwards,
+    ringBreak 480ms 780ms linear forwards;
 }
 
 .check {
@@ -58,8 +58,8 @@
   stroke-linejoin: miter;
   stroke-dasharray: 0 100;
   animation:
-    draw 180ms 340ms ease-out forwards,
-    checkBreak 620ms 840ms linear forwards;
+    draw 130ms 250ms ease-out forwards,
+    checkBreak 480ms 780ms linear forwards;
 }
 
 .logo {
@@ -69,7 +69,7 @@
   width: 46.5%;
   height: 48%;
   overflow: visible;
-  animation: logoGrow 500ms 1620ms ease-out both;
+  animation: logoGrow 160ms 1340ms ease-out both;
 }
 
 .l1,
@@ -80,14 +80,14 @@
 }
 
 .l1 {
-  animation: pieceIn 140ms 1390ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  animation: pieceIn 90ms 1180ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
 .l2 {
   stroke: #252b32;
   stroke-width: 10;
   paint-order: stroke;
-  animation: pieceIn 140ms 1460ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  animation: pieceIn 90ms 1240ms cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 
 .tagline {
@@ -103,8 +103,8 @@
   line-height: 1;
   color: #5e646b;
   animation:
-    fadeIn 150ms 480ms both,
-    fadeOut 160ms 1170ms forwards;
+    fadeIn 110ms 340ms both,
+    fadeOut 130ms 1020ms forwards;
 }
 
 @keyframes sheetIn {

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { BottomNav, lato, passesBackground, useNow } from "../shared";
+import { BottomNav, lato, passesBackground, useNow, useProfileName } from "../shared";
 import { type Venue, venues } from "../venues";
 
 function greeting(date: Date) {
@@ -36,6 +36,8 @@ function VenueCard({ slug, name, address, image, hours }: Venue) {
 
 export default function HomePage() {
   const now = useNow();
+  const name = useProfileName();
+  const firstName = name?.trim().split(/\s+/)[0];
 
   return (
     <section
@@ -50,7 +52,7 @@ export default function HomePage() {
           Champaign, IL
         </p>
         <h1 className="mt-[4px] text-[clamp(22px,6.4vw,26px)] font-bold leading-[1.15] tracking-[-0.2px]">
-          {now ? `${greeting(now)}, Arnav` : "\u00a0"}
+          {now ? `${greeting(now)}${firstName ? `, ${firstName}` : ""}` : "\u00a0"}
         </h1>
       </header>
 

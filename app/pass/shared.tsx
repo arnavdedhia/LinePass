@@ -27,6 +27,31 @@ export function coverTitles(venue: Venue, now: Date) {
   return venue.coverTitles[weekday] ?? [`Cover (${weekday}, All Day)`];
 }
 
+export function profileFromName(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  const initials = parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? "").join("") || "?";
+  const first = (parts[0] ?? "user").toLowerCase();
+  const last = (parts.length > 1 ? parts[parts.length - 1] : first).toLowerCase();
+  return {
+    name,
+    initials,
+    email: parts.length > 1 ? `${first}.${last}@gmail.com` : `${first}@gmail.com`
+  };
+}
+
+export function useProfileName() {
+  const [name, setName] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((response) => response.json())
+      .then((result) => setName(typeof result.user?.name === "string" ? result.user.name : null))
+      .catch(() => setName(null));
+  }, []);
+
+  return name;
+}
+
 export function useNow() {
   const [now, setNow] = useState<Date | null>(null);
 
@@ -119,7 +144,7 @@ function NavItem({
   );
 }
 
-export function BottomNav({ active }: { active: "venues" | "passes" }) {
+export function BottomNav({ active }: { active: "venues" | "passes" | "account" }) {
   return (
     <nav className="grid h-[clamp(56px,10.3dvh,82px)] shrink-0 [@media(max-height:520px)]:h-[50px] grid-cols-5 border-t border-white/[0.04] bg-[#0a1f34] pt-[4px]">
       <NavItem
@@ -170,12 +195,21 @@ export function BottomNav({ active }: { active: "venues" | "passes" }) {
       </div>
       <NavItem label="Drops" icon={<LinePassMark outline className="h-[23px] w-[23px]" />} />
       <NavItem
+        href="/pass/account"
+        active={active === "account"}
         label="Account"
         icon={
-          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" stroke="currentColor" strokeWidth="1.6">
-            <circle cx="10" cy="5.5" r="4.5" />
-            <path d="M1 20.2v-1.4A5.8 5.8 0 0 1 6.8 13h6.4a5.8 5.8 0 0 1 5.8 5.8v1.4" strokeLinecap="round" />
-          </svg>
+          active === "account" ? (
+            <svg width="20" height="21" viewBox="0 0 20 21" fill="currentColor">
+              <circle cx="10" cy="5.5" r="5" />
+              <path d="M1.2 20.5v-1.2A6.2 6.2 0 0 1 7.4 13.1h5.2a6.2 6.2 0 0 1 6.2 6.2v1.2Z" />
+            </svg>
+          ) : (
+            <svg width="20" height="21" viewBox="0 0 20 21" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <circle cx="10" cy="5.5" r="4.5" />
+              <path d="M1 20.2v-1.4A5.8 5.8 0 0 1 6.8 13h6.4a5.8 5.8 0 0 1 5.8 5.8v1.4" strokeLinecap="round" />
+            </svg>
+          )
         }
       />
     </nav>

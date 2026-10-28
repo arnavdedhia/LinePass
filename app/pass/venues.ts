@@ -54,4 +54,4 @@ export function getVenue(slug: string) {
   return venues.find((venue) => venue.slug === slug);
 }
 
-export const PASS_ROUTES = ["/pass", "/pass/staff", "/pass/none", "/pass/home", "/pass/login", ...venues.map((venue) => `/pass/venues/${venue.slug}`)];
+export const PASS_ROUTES = ["/pass", "/pass/staff", "/pass/none", "/pass/home", "/pass/login", "/pass/account", ...venues.map((venue) => `/pass/venues/${venue.slug}`)];

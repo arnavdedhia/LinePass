@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { getBarDayDate } from "../../../../lib/barDay";
 import { getSupabaseServer, hasSupabaseConfig } from "../../../../lib/supabase";
+import { getSessionUserId } from "../../../../lib/userSession";
 
 export async function POST(request: Request) {
-  const staffId = (await cookies()).get("linepass_user_id")?.value;
+  const staffId = getSessionUserId();
   if (!staffId) return NextResponse.json({ error: "Staff must log in first." }, { status: 401 });
   const body = await request.json();
   const passId = typeof body.passId === "string" ? body.passId.trim() : "";
